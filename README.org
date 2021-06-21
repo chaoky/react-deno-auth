@@ -1,0 +1,26 @@
+#+TITLE: Readme
+
+* Auth Service
+- =JWT= for stateless authentication.
+- Refresh token in http only cookie for session persistence
+- Deno for testing purposes, also, having TypeScript by default is pretty neat
+- Using in memory Object as DB for the reduced complexity
+
+* Client
+- =React= spa
+- use local storage with username as a proxy for the refresh token to avoid network calls
+
+* What's Next
+- work on edge cases
+- Use an actual data base
+- remove refresh tokens from device list when exp
+- add route to remove refresh tokens manually (i.e logoff remotely)
+- add more precise type interfaces
+- return proper http error codes
+- use SSR?
+- isolate authentication in it's own service
+
+* Setup
+#+begin_src bash
+docker run -p 8000:8000 --rm $(docker build -q .)
+#+end_src
