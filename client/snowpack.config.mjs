@@ -33,8 +33,11 @@ export default {
   ],
   optimize: {
     /* Example: Bundle your final build: */
-    "bundle": true,
     "minify": true,
+    // "target": "es2017",
+    "splitting": true,
+    "treeshake": true,
+    "manifest": true,
   },
   packageOptions: {
     // source: 'remote',
