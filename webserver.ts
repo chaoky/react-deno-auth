@@ -102,10 +102,18 @@ const app = new Application()
   .use(authRouter.routes())
   //static files
   .use(async (ctx) => {
-    await send(ctx, ctx.request.url.pathname, {
-      root: `${Deno.cwd()}/client/build`,
-      index: "index.html",
-    });
+    if (
+      [".js", ".css", ".json", ".ico"].some((extension) =>
+        ctx.request.url.pathname.endsWith(extension)
+      )
+    ) {
+      await ctx.send({ root: `${Deno.cwd()}/client/build` });
+    } else {
+      await ctx.send({
+        root: `${Deno.cwd()}/client/build`,
+        path: "index.html",
+      });
+    }
   });
 
 await app.listen({ port: 8000 });

@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react'
 import { useForm } from 'react-hook-form';
 import type { RouteComponentProps } from '@reach/router';
 import { sendRegister } from '../auth';

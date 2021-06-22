@@ -1,25 +1,19 @@
 FROM node:latest AS client
 WORKDIR /app
 RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
-COPY client .
+COPY client/package.json client/pnpm-lock.yaml ./
 RUN pnpm install
+COPY * ./
 RUN pnpm run build
-
-# Deno is acting up
-# FROM deno:latest AS server
-# WORKDIR /app
-# COPY server/* .
-# RUN deno bumdle --unstable webserver.ts build
 
 FROM denoland/deno:latest AS server
 WORKDIR /app
 COPY *.ts ./
 RUN deno compile --allow-net --allow-read webserver.ts
 
-
-FROM ubuntu:latest
+FROM debian:latest
 WORKDIR /app
-COPY --from=client /app/build ./client/build
-COPY --from=server /app/webserver ./
+COPY --from=server /app/webserver .
+COPY --from=client /app/build  ./client/build
 EXPOSE 8000
 CMD ["./webserver"]

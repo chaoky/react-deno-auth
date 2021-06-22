@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
 import React from 'react';
+import { css } from '@emotion/css';
 import { useEffect } from 'react';
 import { RouteComponentProps, useNavigate } from '@reach/router';
 
@@ -35,11 +34,11 @@ export function FormHead({ kind }: { kind: string }) {
         thing: 'Sign up',
       }
       : {
-          big: "Let's set up your account",
-          small: 'Already have an account?',
-          action: () => navigate('/login'),
-          thing: 'Sign in',
-        };
+        big: "Let's set up your account",
+        small: 'Already have an account?',
+        action: () => navigate('/login'),
+        thing: 'Sign in',
+      };
 
   return (
     <>
@@ -64,23 +63,23 @@ export function FormHead({ kind }: { kind: string }) {
 export function Layout({ children }: { children: any }) {
   return (
     <div
-      css={{
+      className={css({
         display: 'flex',
         backgroundColor: '#F9F9F9',
         '@media(max-width: 800px)': {
           flexDirection: 'column-reverse',
         },
-      }}
+      })}
     >
       <div
-        css={{
+        className={css({
           display: 'flex',
           flexDirection: 'column',
           minWidth: '65vw',
           minHeight: '100vh',
           flexShrink: 0,
           alignItems: 'center',
-        }}
+        })}
       >
         <div
           style={{
@@ -133,7 +132,7 @@ interface FormFieldProps {
 }
 
 export function FormField(props: FormFieldProps) {
-  const style = {
+  const style = css({
     padding: '1em',
     backgroundColor: 'transparent',
     borderRadius: '.2em',
@@ -150,15 +149,15 @@ export function FormField(props: FormFieldProps) {
     ':focus': {
       outlineColor: props.error ? 'red' : 'black',
     },
-  };
+  });
 
   return (
     <div>
       {props.kind == 'select' ? (
-        <select {...props.register} css={style}>
+        <select {...props.register} className={style}>
           <option value="">{props.placeHolder}</option>
           {props.options!.map((e, i) => (
-              <option style={{ color: 'black' }} key={i} value={e}>
+            <option style={{ color: 'black' }} key={i} value={e}>
               {e}
             </option>
           ))}
@@ -166,7 +165,7 @@ export function FormField(props: FormFieldProps) {
       ) : (
         <input
           {...props.register}
-          css={style}
+          className={style}
           placeholder={props.placeHolder}
           type={props.kind ? 'password' : 'text'}
         />
