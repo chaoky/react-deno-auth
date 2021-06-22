@@ -1,5 +1,11 @@
 #+TITLE: Readme
 
+* Setup
+** Docker
+#+begin_src bash
+docker run -p 8000:8000 --rm $(docker build -q .)
+#+end_src
+
 * Auth Service
 - =JWT= for stateless authentication.
 - Refresh token in http only cookie for session persistence
@@ -20,7 +26,3 @@
 - use SSR?
 - isolate authentication in it's own service
 
-* Setup
-#+begin_src bash
-docker run -p 8000:8000 --rm $(docker build -q .)
-#+end_src
