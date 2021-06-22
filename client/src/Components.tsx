@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/css';
 import { useEffect } from 'react';
 import { RouteComponentProps, useNavigate } from '@reach/router';
+import EyeSvg from './eye.svg';
+import ArrowSvg from './arrow-down.svg';
 
 //TODO maybe use a HOC instead?
 interface AuthSwitchProps extends RouteComponentProps {
@@ -24,21 +26,21 @@ export function AuthRoute({ Component, only, ...props }: AuthSwitchProps) {
 }
 
 export function FormHead({ kind }: { kind: string }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { big, small, action, thing } =
     kind == 'login'
       ? {
-        big: "Let's sign you in",
-        small: "Don't have an account?",
-        action: () => navigate('/register'),
-        thing: 'Sign up',
-      }
+          big: "Let's sign you in",
+          small: "Don't have an account?",
+          action: () => navigate('/register'),
+          thing: 'Sign up',
+        }
       : {
-        big: "Let's set up your account",
-        small: 'Already have an account?',
-        action: () => navigate('/login'),
-        thing: 'Sign in',
-      };
+          big: "Let's set up your account",
+          small: 'Already have an account?',
+          action: () => navigate('/login'),
+          thing: 'Sign in',
+        };
 
   return (
     <>
@@ -52,7 +54,10 @@ export function FormHead({ kind }: { kind: string }) {
         }}
       >
         <span>{small} </span>
-        <span style={{ color: '#286EFA', fontWeight: 'bold' }} onClick={action}>
+        <span
+          style={{ color: '#286EFA', fontWeight: 'bold', cursor: 'pointer' }}
+          onClick={action}
+        >
           {thing}
         </span>
       </div>
@@ -132,6 +137,8 @@ interface FormFieldProps {
 }
 
 export function FormField(props: FormFieldProps) {
+  const { options, watch, kind, error, register, placeHolder } = props;
+  const [hidden, setHidden] = useState(() => kind == 'password');
   const style = css({
     padding: '1em',
     backgroundColor: 'transparent',
@@ -143,33 +150,59 @@ export function FormField(props: FormFieldProps) {
       color: '#999',
     },
     //TODO figure a better solution
-    color: props.watch == '' ? '#999' : 'black',
+    color: watch == '' ? '#999' : 'black',
 
-    borderColor: props.error ? 'red' : '#EFEFEF',
-    ':focus': {
-      outlineColor: props.error ? 'red' : 'black',
+    borderColor: error ? 'red' : '#EFEFEF',
+    ':focus-visible': {
+      outlineColor: error ? 'red' : 'black',
+      //fixes outline on firefox and breaks on chrome
+      /* outlineStyle: 'solid', */
     },
+
+    appearance: 'none',
   });
+
+  const field =
+    kind == 'select' ? (
+      <select {...register} className={style}>
+        <option value="">{placeHolder}</option>
+        {options!.map((e, i) => (
+          <option style={{ color: 'black' }} key={i} value={e}>
+            {e}
+          </option>
+        ))}
+      </select>
+    ) : (
+      <input
+        {...register}
+        className={style}
+        placeholder={placeHolder}
+        type={hidden ? 'password' : 'text'}
+      />
+    );
+
+  const icon = kind && (
+    <img
+      src={kind == 'select' ? ArrowSvg : EyeSvg}
+      style={{
+        position: 'absolute',
+        right: '3%',
+        top: 'calc(50% - .4em)',
+        height: 'auto',
+        width: '.8em',
+        cursor: 'pointer',
+        pointerEvents: kind == 'select' ? 'none' : 'auto',
+      }}
+      onClick={() => setHidden(!hidden)}
+    />
+  );
 
   return (
     <div>
-      {props.kind == 'select' ? (
-        <select {...props.register} className={style}>
-          <option value="">{props.placeHolder}</option>
-          {props.options!.map((e, i) => (
-            <option style={{ color: 'black' }} key={i} value={e}>
-              {e}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <input
-          {...props.register}
-          className={style}
-          placeholder={props.placeHolder}
-          type={props.kind ? 'password' : 'text'}
-        />
-      )}
+      <div style={{ position: 'relative' }}>
+        {field}
+        {icon}
+      </div>
       <p
         style={{
           color: 'red',
@@ -177,7 +210,7 @@ export function FormField(props: FormFieldProps) {
           margin: '.4em 0',
         }}
       >
-        {props.error}&nbsp;
+        {error}&nbsp;
       </p>
     </div>
   );

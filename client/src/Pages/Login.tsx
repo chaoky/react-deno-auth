@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import type { RouteComponentProps } from '@reach/router';
 import { useForm } from 'react-hook-form';
 
