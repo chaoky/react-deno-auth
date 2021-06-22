@@ -1,8 +1,4 @@
-import {
-  Application,
-  Router,
-  send,
-} from "https://deno.land/x/oak@v7.6.3/mod.ts";
+import { Application, Router } from "https://deno.land/x/oak@v7.6.3/mod.ts";
 import { verify, create } from "https://deno.land/x/djwt@v2.2/mod.ts";
 import * as s from "https://deno.land/x/scrypt@v2.0.0/mod.ts";
 import { UserDB, LoginForm, RegisterForm } from "./types.ts";
@@ -103,7 +99,7 @@ const app = new Application()
   //static files
   .use(async (ctx) => {
     if (
-      [".js", ".css", ".json", ".ico"].some((extension) =>
+      [".js", ".css", ".json", ".ico", ".svg"].some((extension) =>
         ctx.request.url.pathname.endsWith(extension)
       )
     ) {
